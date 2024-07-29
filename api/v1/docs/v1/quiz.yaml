@@ -1,0 +1,191 @@
+paths:
+  /quizzes:
+    get:
+      summary: Get all quizzes
+      tags: Quiz
+      responses:
+        '200':
+          description: A list of quizzes
+    post:
+      summary: Create a new quiz
+      tags: Quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quiz'
+      responses:
+        '201':
+          description: Quiz created
+
+  /quizzes/{quizId}:
+    get:
+      summary: Get a quiz by ID
+      tags: Quiz
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A quiz
+    put:
+      summary: Update a quiz by ID
+      tags: Quiz
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quiz'
+      responses:
+        '200':
+          description: Quiz updated
+    delete:
+      summary: Delete a quiz by ID
+      tags: Quiz
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Quiz deleted
+
+  /quizzes/{quizId}/questions:
+    get:
+      summary: Get all questions for a quiz
+      tags: Question
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of questions
+    post:
+      summary: Add a question to a quiz
+      tags: Question
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '201':
+          description: Question added
+
+  /quizzes/{quizId}/questions/{questionId}:
+    get:
+      summary: Get a question by ID
+      tags: Question
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A question
+    put:
+      summary: Update a question by ID
+      tags: Question
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '200':
+          description: Question updated
+    delete:
+      summary: Delete a question by ID
+      tags: Question
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Question deleted
+
+components:
+  schemas:
+    Quiz:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+    Answer:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        isCorrect:
+          type: boolean
