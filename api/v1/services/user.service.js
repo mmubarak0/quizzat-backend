@@ -1,3 +1,4 @@
+const mongo = require("mongodb");
 const client = require("../../utils/db");
 const { validateUpdateUser, validateCreateUser } = require("../middlewares/validation");
 
@@ -11,16 +12,29 @@ class userService {
 
   async getUserByEmail(email, show_secret = false) {
     if (!show_secret) {
-      return await users.findOne({ email }, { projection: { password: 0 } });
+      return await users.findOne({ email, deleted: { $ne: true } }, { projection: { password: 0 } });
     }
-    return await users.findOne({ email });
+    return await users.findOne({ email, deleted: { $ne: true } });
   }
 
   async getUserById(id, show_secret = false) {
-    if (!show_secret) {
-      return await users.findOne({ _id: id }, { projection: { password: 0 } });
+    let objId = null;
+    if (id instanceof mongo.ObjectId) {
+      objId = id;
+    } else {
+      objId = new mongo.ObjectId(id);
     }
-    return await users.findOne({ _id: id });
+    if (!show_secret) {
+      return await users.findOne({ _id: objId, deleted: { $ne: true } }, { projection: { password: 0 } });
+    }
+    return await users.findOne({ _id: objId, deleted: { $ne: true } });
+  }
+
+  async getAllUsers(show_secret = false) {
+    if (!show_secret) {
+      return await users.find({ deleted: { $ne: true } }, { projection: { password: 0 } }).toArray();
+    }
+    return await users.find({ deleted: { $ne: true } }).toArray();
   }
 
   async createUser(user) {
@@ -30,13 +44,29 @@ class userService {
 
   async updateUser(id, user) {
     user = validateUpdateUser(user);
-    return await users.updateOne({ _id: id }, { $set: user });
+    console.log(user)
+    let objId = null;
+    if (id instanceof mongo.ObjectId) {
+      objId = id;
+    } else {
+      objId = new mongo.ObjectId(id);
+    }
+    return await users.updateOne({ _id: objId }, { $set: user });
   }
 
-  async deleteUser(id) {
-    // soft delete user
-    return await users.updateOne({ _id: id }, { $set: { deleted: true } });
-    // return users.deleteOne({ _id: id });
+  async deleteUser(id, hard = false) {
+    let objId = null;
+    if (id instanceof mongo.ObjectId) {
+      objId = id;
+    } else {
+      objId = new mongo.ObjectId(id);
+    }
+    if (!hard) {
+      // soft delete user
+      return await users.updateOne({ _id: objId }, { $set: { deleted: true } });
+    }
+    // hard delete user
+    return users.deleteOne({ _id: objId });
   }
 }
 

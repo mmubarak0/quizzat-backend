@@ -52,6 +52,41 @@ class AuthController {
       res.status(500).json({ message: [responses.INTERNAL_SERVER_ERROR], statusCode: 500 });
     }
   }
+
+  async google(req, res) {
+    try {
+      const url = await authService.getGoogleAuthUrl();
+      res.redirect(url);
+    } catch (error) {
+      res.status(500).json({ message: [responses.INTERNAL_SERVER_ERROR], statusCode: 500 });
+    }
+  }
+
+  async googleCallback(req, res) {
+    const { code } = req.query;
+
+    try {
+      const data = await authService.getGoogleUser(code);
+      let user = await userService.getUserByEmail(data.email, true);
+      if (!user) {
+        user = await userService.createUser({
+          email: data.email,
+          firstName: data.given_name,
+          lastName: data.family_name,
+        });
+        user = await userService.getUserById(user.insertedId, true);
+      }
+      let tokens = await authService.generateToken(user);
+      authService.storeToken(res, "refreshToken", tokens.refreshToken);
+      res.status(200).json({ message: [responses.LOGIN_SUCCESS], statusCode: 200, ...tokens });
+    } catch (error) {
+      res.status(500).json({ message: [responses.INTERNAL_SERVER_ERROR], statusCode: 500 });
+    }
+  }
+
+  async verifyToken(req, res) {
+    return res.status(200).json({ message: responses.SUCCESS, statusCode: 200 });
+  }
 }
 
 const authController = new AuthController();

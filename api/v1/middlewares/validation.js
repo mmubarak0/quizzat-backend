@@ -71,12 +71,12 @@ function userValidation(req, res, next) {
 }
 
 function validateCreateUser(user) {
-  const { deleted, is_super, ...rest } = user;
+  const { deleted, role, ...rest } = user;
   return rest;
 }
 
 function validateUpdateUser(user) {
-  const { email, id, deleted, is_super, ...rest } = user;
+  const { email, id, deleted, role, ...rest } = user;
   return rest;
 }
 
