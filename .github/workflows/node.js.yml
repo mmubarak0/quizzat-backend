@@ -21,12 +21,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: MongoDB in GitHub Actions
+      uses: supercharge/mongodb-github-action@1.11.0
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        DATABASE_URI: ${{ secrets.DATABASE_URI }}
+        # DATABASE_URI: ${{ secrets.DATABASE_URI }}
       env:
         DATABASE_URI: ${{ secrets.DATABASE_URI }}
         NODE_ENV: "production"
