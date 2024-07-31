@@ -10,7 +10,7 @@ class AuthController {
       const { email, password, firstName, lastName } = req.body;
       const user = await userService.getUserByEmail(email, true);
       if (user) {
-        return res.status(422).json({ message: [responses.USER_EXISTS], statusCode: 422 });
+        return res.status(409).json({ message: [responses.USER_EXISTS], statusCode: 409 });
       }
       const hash = await authService.encryptPassword(password);
       let new_user = await userService.createUser({
@@ -39,7 +39,7 @@ class AuthController {
       const { email, password } = req.body;
       const user = await userService.getUserByEmail(email, true);
       if (!user) {
-        return res.status(400).json({ message: [responses.USER_NOT_FOUND], statusCode: 404 });
+        return res.status(404).json({ message: [responses.USER_NOT_FOUND], statusCode: 404 });
       }
       const valid = await authService.decryptPassword(password, user.password);
       if (!valid) {
