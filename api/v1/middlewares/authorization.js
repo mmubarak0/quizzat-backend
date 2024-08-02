@@ -2,6 +2,7 @@ const userService = require("../services/user.service");
 const authService = require("../services/auth.service");
 const responses = require("../../utils/responses");
 const mongo = require("mongodb");
+const logger = require("../../utils/logger");
 
 async function loginRequired(req, res, next) {
   if (!req.header("Authorization")) return res.status(401).json({ message: [responses.UNAUTHORIZED], statusCode: 401 });
@@ -16,6 +17,7 @@ async function loginRequired(req, res, next) {
     next();
   } catch (error) {
     res.status(401).json({ message: [responses.TOKEN_INVALID], statusCode: 401 });
+    logger.log(error);
   }
 }
 
@@ -34,7 +36,7 @@ function selfValidation(req, res, next) {
 function selfOrSuperValidation(req, res, next) {
   if (!req.user) return res.status(403).json({ message: [responses.UNAUTHORIZED], statusCode: 403 });
   if (req.user.role === "super") return next();
-  console.log(req.user._id.toString())
+  logger.log(req.user._id.toString())
   if (req.user._id.toString() !== req.params.id)
     return res.status(403).json({ message: [responses.UNAUTHORIZED], statusCode: 403 });
   next();

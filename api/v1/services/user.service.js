@@ -1,5 +1,6 @@
 const mongo = require("mongodb");
 const client = require("../../utils/db");
+const logger = require("../../utils/logger");
 const { validateUpdateUser, validateCreateUser } = require("../middlewares/validation");
 
 const { DATABASE_NAME, USERS_COLLECTION } = require("../../../config");
@@ -44,7 +45,7 @@ class userService {
 
   async updateUser(id, user) {
     user = validateUpdateUser(user);
-    console.log(user)
+    logger.log(user);
     let objId = null;
     if (id instanceof mongo.ObjectId) {
       objId = id;
@@ -67,6 +68,26 @@ class userService {
     }
     // hard delete user
     return users.deleteOne({ _id: objId });
+  }
+
+  async setRole(id, role) {
+    let objId = null;
+    if (id instanceof mongo.ObjectId) {
+      objId = id;
+    } else {
+      objId = new mongo.ObjectId(id);
+    }
+    return await users.updateOne({ _id: objId }, { $set: { role } });
+  }
+
+  async setDeleted(id, deleted) {
+    let objId = null;
+    if (id instanceof mongo.ObjectId) {
+      objId = id;
+    } else {
+      objId = new mongo.ObjectId(id);
+    }
+    return await users.updateOne({ _id: objId }, { $set: { deleted } });
   }
 }
 
