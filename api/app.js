@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const authRouter = require('./v1/routes/auth.routes');
+const userRouter = require('./v1/routes/user.routes');
+const db = require('./utils/db');
 
 // configure json response on this server.
 app.use(express.json());
@@ -9,6 +11,7 @@ app.use(cors());
 
 // application routes
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 
 // test route to check if the server is running
 app.get('/', (req, res) => {

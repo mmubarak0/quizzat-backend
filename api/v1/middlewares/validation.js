@@ -8,9 +8,9 @@ function newUserValidation(req, res, next) {
   const requiredFields = { email, password, firstName, lastName };
   const missingFields = [];
   const errors = [];
-  for (const value of Object.values(requiredFields)) {
-    if (!value) {
-      missingFields.push(value);
+  for (const key in requiredFields) {
+    if (!requiredFields[key]) {
+      missingFields.push(key);
     }
   }
   // check if any required field is missing
@@ -43,9 +43,9 @@ function userValidation(req, res, next) {
   const requiredFields = { email, password };
   const missingFields = [];
   const errors = [];
-  for (const value of Object.values(requiredFields)) {
-    if (!value) {
-      missingFields.push(value);
+  for (const key in requiredFields) {
+    if (!requiredFields[key]) {
+      missingFields.push(key);
     }
   }
   // check if any required field is missing
@@ -71,12 +71,12 @@ function userValidation(req, res, next) {
 }
 
 function validateCreateUser(user) {
-  const { deleted, is_super, ...rest } = user;
+  const { deleted, role, ...rest } = user;
   return rest;
 }
 
 function validateUpdateUser(user) {
-  const { email, id, deleted, is_super, ...rest } = user;
+  const { email, id, deleted, role, ...rest } = user;
   return rest;
 }
 

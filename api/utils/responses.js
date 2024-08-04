@@ -19,6 +19,9 @@ const Responses = Object.freeze({
   TOKEN_EXPIRED: "Token expired.",
   TOKEN_INVALID: "Token invalid.",
   TOKEN_REFRESH_ERROR: "Token refresh error.",
+  NETWORK_ERROR: "Network error.",
+  DELETED_ACCOUNT: "This account has been deleted.",
+  USER_DELETED: "User deleted.",
 });
 
 module.exports = Responses;

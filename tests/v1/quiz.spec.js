@@ -7,6 +7,10 @@ describe("GET /", () => {
   // this test should always pass
   test("should return 200 OK", async () => {
     const res = await request(app).get("/");
+    expect(res.statusCode).toEqual(200);
+  });
+  test("should return 404 Not Found", async () => {
+    const res = await request(app).get("/xyz");
     expect(res.statusCode).toEqual(404);
   });
 });
