@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const authRouter = require('./v1/routes/auth.routes');
 const userRouter = require('./v1/routes/user.routes');
+const db = require('./utils/db');
 
 // configure json response on this server.
 app.use(express.json());
