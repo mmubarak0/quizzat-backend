@@ -1,5 +1,6 @@
-const { DATABASE_URI } = require('../../config');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { DATABASE_URI } = require("../../config");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const logger = require("./logger");
 
 const client = new MongoClient(DATABASE_URI, {
   serverApi: {
@@ -13,12 +14,10 @@ async function run() {
     // Connect the client to the server (optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db('admin').command({ ping: 1 });
-    console.log(
-      'Pinged your deployment. You successfully connected to MongoDB!',
-    );
+    await client.db("admin").command({ ping: 1 });
+    logger.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch {
-    console.log('Failed to connect to MongoDB!');
+    logger.log("Failed to connect to MongoDB!");
   }
 }
 
