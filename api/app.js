@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to the API', statusCode: 200 });
 });
 
+app.get('/api/v1/test', (req, res) => {
+  res.status(200).json({ message: 'API is working: built nodejs v20', statusCode: 200 });
+}
+
 // 404 error handler
 app.use((req, res) => {
   res.status(404).json({ message: 'This endpoint has not been impelemented yet', statusCode: 404 });
