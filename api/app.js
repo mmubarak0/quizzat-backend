@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/v1/test', (req, res) => {
   res.status(200).json({ message: 'API is working: built nodejs v20', statusCode: 200 });
-}
+});
 
 // 404 error handler
 app.use((req, res) => {
